@@ -1,22 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { Provider } from 'react-redux';
-import store from './store/index';
 import './index.css';
-
-// for viewing store in browser console
-// window.store = store;
-
-require('dotenv').config();
+import App from './App';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 ReactDOM.render(
-   <Provider store={store}>
-      <BrowserRouter>
-         <App />
-      </BrowserRouter>
-   </Provider>,
-   document.getElementById('root')
+  <React.StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-//

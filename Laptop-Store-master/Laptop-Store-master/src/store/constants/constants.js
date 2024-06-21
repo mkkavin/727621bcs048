@@ -1,20 +1,33 @@
-const FETCH_REQUEST = 'FETCH_REQUEST';
-const FETCH_PRODUCTS_SUCCESS = 'FETCH_PRODUCTS_SUCCESS';
-const CART_FETCH_SUCCESS = 'CART_FETCH_SUCCESS';
-const FETCH_FAIL = 'FETCH_FAIL';
+import axios from 'axios';
 
-const CART_UPDATE_REQUEST = 'CART_UPDATE_REQUEST';
-const CART_UPDATE_SUCCESS = 'CART_UPDATE_SUCCESS';
-const CART_UPDATE_FAIL = 'CART_UPDATE_FAIL';
-const CART_RESET = 'CART_RESET';
+const baseURL = 'http://20.244.56.144/test'; // Replace with actual base URL
 
-export {
-   FETCH_REQUEST,
-   FETCH_PRODUCTS_SUCCESS,
-   CART_FETCH_SUCCESS,
-   FETCH_FAIL,
-   CART_UPDATE_REQUEST,
-   CART_UPDATE_SUCCESS,
-   CART_UPDATE_FAIL,
-   CART_RESET,
+const api = axios.create({
+  baseURL,
+});
+
+export const getTopProducts = async (company, category, top, minPrice, maxPrice) => {
+  try {
+    const response = await api.get(`/companies/${company}/categories/${category}/products`, {
+      params: {
+        top,
+        minPrice,
+        maxPrice,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching top products:', error);
+    throw error;
+  }
+};
+
+export const getProductById = async (productId) => {
+  try {
+    const response = await api.get(`/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product ${productId}:`, error);
+    throw error;
+  }
 };

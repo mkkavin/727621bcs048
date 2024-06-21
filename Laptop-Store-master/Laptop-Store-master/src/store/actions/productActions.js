@@ -1,28 +1,37 @@
-import * as actionTypes from '../constants/productConstants';
-import { commerce } from '../../lib/commerce';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getProductById } from '../services/api';
 
-const fetchProducts = () => async (dispatch) => {
-   try {
-      dispatch({
-         type: actionTypes.FETCH_REQUEST,
-      });
+const ProductDetail = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
 
-      const { data } = await commerce.products.list();
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const data = await getProductById(productId);
+        setProduct(data);
+      } catch (error) {
+        console.error(`Error fetching product ${productId}:`, error);
+      }
+    };
 
-      dispatch({
-         type: actionTypes.GET_PRODUCTS_SUCCESS,
-         payload: data,
-      });
-   } catch (error) {
-      console.log(error);
-      dispatch({
-         type: actionTypes.GET_PRODUCTS_FAIL,
-         payload:
-            error.response && error.response.data.message
-               ? error.response.data.message
-               : error.message,
-      });
-   }
+    fetchProduct();
+  }, [productId]);
+
+  if (!product) return <div>Loading...</div>;
+
+  return (
+    <div className="product-detail">
+      <h2>{product.productName}</h2>
+      <p>Company: {product.company}</p>
+      <p>Category: {product.category}</p>
+      <p>Price: ${product.price}</p>
+      <p>Rating: {product.rating}/5</p>
+      <p>Discount: {product.discount}%</p>
+      <p>Availability: {product.availability}</p>
+    </div>
+  );
 };
 
-export { fetchProducts };
+export default ProductDetail;
